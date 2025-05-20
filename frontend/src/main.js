@@ -3,7 +3,8 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { MotionPlugin } from '@vueuse/motion'
-app.use(MotionPlugin)
 
+const app = createApp(App)     // Primero crea la app
+app.use(MotionPlugin)          // Ahora puedes usar el plugin
 
-createApp(App).mount('#app')
+app.mount('#app')              // Finalmente monta la app

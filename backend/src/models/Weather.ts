@@ -15,6 +15,21 @@ export class Weather {
   @Column("float")
   temperature!: number;
 
+  @Column("float")
+  feels_like!: number;
+
+  @Column("float")
+  humidity!: number;
+
+  @Column("float")
+  wind_speed!: number;
+
+  @Column()
+  icon!: string;
+
+  @Column()
+  country!: string;
+
   @Column()
   date!: string;
 

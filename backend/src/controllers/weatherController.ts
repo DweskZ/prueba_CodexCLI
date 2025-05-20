@@ -24,36 +24,44 @@ export const searchAndSaveWeather = async (req: Request, res: Response) => {
     const data = response.data;
 
     const clima = new Weather();
-    clima.city = city;
+    clima.city = data.name;
     clima.description = data.weather[0].description;
     clima.temperature = data.main.temp;
+    clima.feels_like = data.main.feels_like;
+    clima.humidity = data.main.humidity;
+    clima.wind_speed = data.wind.speed;
+    clima.icon = data.weather[0].icon;
+    clima.country = data.sys.country;
     clima.date = new Date().toISOString().split("T")[0];
     clima.user = user;
 
     await weatherRepo.save(clima);
 
     res.status(200).json({
-      ciudad: city,
+      ciudad: clima.city,
+      pais: clima.country,
       descripcion: clima.description,
       temperatura: clima.temperature,
+      sensacion: clima.feels_like,
+      humedad: clima.humidity,
+      viento: clima.wind_speed,
+      icono: `http://openweathermap.org/img/wn/${clima.icon}@2x.png`,
+      fecha: clima.date
     });
   } catch (error) {
     res.status(500).json({ message: "Error al obtener clima", error });
   }
 };
 
-
 export const getUserWeatherHistory = async (req: Request, res: Response) => {
   const { email } = req.params;
 
   try {
-    const user = await AppDataSource.getRepository(User).findOne({ where: { email } });
-
+    const user = await userRepo.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    const weatherRepo = AppDataSource.getRepository(Weather);
     const history = await weatherRepo.find({
       where: { user: { id: user.id } },
       order: { id: "DESC" }

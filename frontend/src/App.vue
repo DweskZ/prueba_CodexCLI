@@ -99,28 +99,49 @@
         </div>
         <div class="history-section">
           <div class="history-title">Historial de búsquedas</div>
-          <div v-if="historial.length === 0" class="history-cards">
-            <div class="weather-card empty-card">
+          <!-- CONTENEDOR SCROLL DEL HISTORIAL -->
+          <div class="history-cards-container">
+            <div v-if="historial.length === 0" class="weather-card empty-card">
               Sin búsquedas aún.
             </div>
-          </div>
-          <div v-else class="history-cards">
-            <div
-              v-for="busqueda in historial"
-              :key="busqueda.id"
-              class="weather-card"
-            >
-              <div class="weather-details">
-                <div class="location-row">
-                  <span class="location">{{ busqueda.city }}, {{ busqueda.country }}</span>
-                  <span class="search-time">{{ formatFecha(busqueda.date) }}</span>
-                </div>
-                <div class="weather-row">
-                  <span class="desc">{{ busqueda.description }}</span>
-                  <span class="temp">{{ busqueda.temperature }}°C</span>
-                  <span class="feels">Sensación: {{ busqueda.feels_like }}°C</span>
-                  <span class="humidity">Humedad: {{ busqueda.humidity }}%</span>
-                  <span class="wind">Viento: {{ busqueda.wind_speed }} m/s</span>
+            <div v-else class="history-cards">
+              <div
+                v-for="busqueda in historial"
+                :key="busqueda.id"
+                class="weather-card"
+              >
+                <div class="weather-details">
+                  <!-- Ciudad, País y Fecha -->
+                  <div class="weather-card-row-top">
+                    <div class="city-country">
+                      <span class="city">{{ busqueda.city }}</span>
+                      <span class="country">, {{ busqueda.country }}</span>
+                    </div>
+                    <div class="weather-card-date">{{ formatFecha(busqueda.date) }}</div>
+                  </div>
+                  <!-- Descripción e Icono -->
+                  <div class="weather-card-row-mid">
+                    <span class="weather-description">{{ busqueda.description }}</span>
+                    <span v-if="busqueda.icon" class="weather-icon">
+                      <img :src="getIcon(busqueda.icon)" :alt="busqueda.description" />
+                    </span>
+                  </div>
+                  <!-- Detalles principales -->
+                  <div class="weather-card-info">
+                    <span class="weather-label">Temp:</span>
+                    <span class="weather-value">{{ busqueda.temperature }}°C</span>
+                    <span class="weather-label">| Sensación:</span>
+                    <span class="weather-value">{{ busqueda.feels_like }}°C</span>
+                    <span class="weather-label">| Humedad:</span>
+                    <span class="weather-value">{{ busqueda.humidity }}%</span>
+                    <span class="weather-label">| Viento:</span>
+                    <span class="weather-value">{{ busqueda.wind_speed }} m/s</span>
+                  </div>
+                  <!-- Usuario (opcional) -->
+                  <div class="weather-card-user" v-if="busqueda.user && busqueda.user.email">
+                    <span class="weather-label">Usuario:</span>
+                    <span class="weather-value">{{ busqueda.user.email }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -220,13 +241,15 @@ function formatFecha(fecha) {
   const d = new Date(fecha)
   return d.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' })
 }
+function getIcon(icon) {
+  return `https://openweathermap.org/img/wn/${icon}@2x.png`;
+}
 onMounted(() => {
   if (user.value) obtenerHistorial()
 })
 </script>
 
 <style scoped>
-/* ------------- GLOBAL: sin franjas negras, fondo SIEMPRE azul ------------ */
 :global(html),
 :global(body),
 :global(#app) {
@@ -239,8 +262,6 @@ onMounted(() => {
   box-sizing: border-box;
   background: #f0f5ff !important;
 }
-/* ------------------------------------------------------------------------ */
-
 .weather-dashboard-bg {
   min-height: 100vh;
   min-width: 100vw;
@@ -253,6 +274,7 @@ onMounted(() => {
   font-family: 'Inter', 'Montserrat', Arial, sans-serif;
   overflow: auto;
 }
+/* ---- Login/Register ---- */
 .auth-dual-center {
   background: #fff;
   border-radius: 24px;
@@ -267,7 +289,6 @@ onMounted(() => {
   padding: 0;
   gap: 0;
 }
-
 .auth-card-side {
   flex: 1 1 0;
   padding: 46px 44px 46px 44px;
@@ -337,9 +358,33 @@ onMounted(() => {
   transition: background .17s;
   margin-top: 10px;
 }
-.primary-btn { background: #2563eb; }
+.primary-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 0 32px;
+  font-size: 16px;
+  font-weight: 700;
+  height: 48px;
+  min-width: 115px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .17s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .primary-btn:hover { background: #1549b7; }
-.secondary-btn { background: #4b96ff; }
+.secondary-btn {
+  background: #4b96ff;
+  padding: 14px 0;
+  min-width: 115px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .secondary-btn:hover { background: #2265d4; }
 .auth-msg {
   color: #e74c3c;
@@ -348,7 +393,6 @@ onMounted(() => {
   font-size: 1.07rem;
   font-weight: 500;
 }
-
 .divider-vertical {
   display: flex;
   flex-direction: column;
@@ -373,7 +417,6 @@ onMounted(() => {
   margin: 12px 0;
   line-height: 1;
 }
-
 @media (max-width: 950px) {
   .auth-dual-center {
     flex-direction: column;
@@ -405,12 +448,13 @@ onMounted(() => {
     font-size: 18px;
   }
 }
-
+/* ---- Dashboard ---- */
 .dashboard-container {
   width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
 }
 .header-bar {
   background: #ffffff;
@@ -470,6 +514,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  padding-bottom: 0.5rem;
 }
 .search-title {
   color: #1e3a8a;
@@ -480,6 +525,7 @@ onMounted(() => {
   display: flex;
   flex-direction: row;
   gap: 14px;
+  align-items: center;
 }
 .city-input {
   background: #f8fafc;
@@ -488,33 +534,42 @@ onMounted(() => {
   padding: 14px;
   font-size: 15px;
   flex: 1;
+  min-width: 0;
 }
 .history-section {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
 }
 .history-title {
   color: #1e3a8a;
   font-size: 18px;
   font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+.history-cards-container {
+  max-height: 45vh;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  padding-right: 2px;
 }
 .history-cards {
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 9px;
   width: 100%;
 }
 .weather-card {
   background: #f8fafc;
-  border-radius: 10px;
-  padding: 17px 23px;
+  border-radius: 9px;
+  padding: 12px 15px;
+  box-shadow: 0px 2px 8px 0px rgba(0,0,0,0.04);
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   font-size: 15px;
   color: #22223b;
-  box-shadow: 0px 2px 8px 0px rgba(0,0,0,0.04);
+  min-height: 62px;
 }
 .empty-card {
   text-align: center;
@@ -524,29 +579,75 @@ onMounted(() => {
 .weather-details {
   width: 100%;
 }
-.location-row {
+.weather-card-row-top {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
-  color: #1e293b;
-  font-weight: 600;
-  font-size: 16px;
+  align-items: center;
+  font-size: 1.11rem;
+  margin-bottom: 2px;
 }
-.search-time {
-  color: #64748b;
-  font-size: 14px;
+.city-country {
+  display: flex;
+  align-items: baseline;
+}
+.city {
+  color: #1457c9;
+  font-size: 1.19rem;
+  font-weight: 800;
+  margin-right: 2px;
+  letter-spacing: 0.2px;
+}
+.country {
+  color: #1e293b;
+  font-size: 1rem;
   font-weight: 400;
 }
-.weather-row {
+.weather-card-date {
+  color: #888;
+  font-size: 0.98rem;
+  font-weight: 400;
+}
+.weather-card-row-mid {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 4px;
+}
+.weather-description {
+  color: #2563eb;
+  font-size: 1.11rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.weather-icon img {
+  width: 34px;
+  height: 34px;
+}
+.weather-card-info {
+  font-size: 0.98rem;
+  color: #334155;
+  font-weight: 500;
+  margin-bottom: 1px;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  font-size: 15px;
-  margin-top: 2px;
+  gap: 5px 7px;
+  align-items: center;
 }
-.desc { color: #2563eb; font-weight: 500; }
-.temp { color: #334155; font-weight: 600; }
-.feels, .humidity, .wind { color: #64748b; font-size: 14px; }
+.weather-label {
+  color: #64748b;
+  font-size: 0.98rem;
+  margin-left: 1px;
+}
+.weather-value {
+  font-weight: 700;
+  color: #22223b;
+  margin-right: 7px;
+}
+.weather-card-user {
+  font-size: 0.95rem;
+  color: #888;
+  margin-top: 4px;
+}
 .footer {
   text-align: center;
   color: #22607599;

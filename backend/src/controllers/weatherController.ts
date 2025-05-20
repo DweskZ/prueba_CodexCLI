@@ -17,7 +17,8 @@ export const searchAndSaveWeather = async (req: Request, res: Response) => {
   try {
     const user = await userRepo.findOne({ where: { email } });
     if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
-  const apiKey = "43131d488a09228f94040570afb27717";
+
+    const apiKey = ""
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
     const response = await axios.get(url);
     const data = response.data;

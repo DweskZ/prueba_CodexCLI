@@ -6,7 +6,7 @@ import { Weather } from "./models/Weather";
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: "localhost",
-  port: 5432,
+  port: 5433,
   username: "user",
   password: "password",
   database: "clima",

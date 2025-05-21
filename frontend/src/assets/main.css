@@ -1,35 +1,460 @@
-@import './base.css';
+/* ==== FUENTE Y VARIABLES GLOBALES ==== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@400;600&display=swap');
 
-#app {
-  max-width: 1280px;
+/* Paleta y variables para mantener colores y tamaños */
+:root {
+  --main-bg: #f0f5ff;                  /* Fondo azul claro global */
+  --main-blue: #1e3a8a;                /* Azul principal para títulos */
+  --main-blue-light: #2563eb;          /* Azul para botones destacados */
+  --main-border: #e9ecf3;              /* Gris/azul para bordes */
+  --input-bg: #f8fafc;                 /* Fondo de inputs y tarjetas */
+  --input-border: #cbd5e1;             /* Borde para inputs */
+  --text-main: #22223b;                /* Texto principal, casi negro */
+  --text-secondary: #64748b;           /* Texto secundario, gris-azul */
+  --shadow: 0px 4px 18px 0px rgba(0,0,0,0.09);      /* Sombra para main-content */
+  --card-shadow: 0px 2px 8px 0px rgba(0,0,0,0.04);  /* Sombra suave para tarjetas */
+}
+
+/* ==== RESETEO Y TIPOGRAFÍA GLOBAL ==== */
+html, body, #app {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: var(--main-bg);
+  font-family: 'Inter', 'Montserrat', Arial, sans-serif;
+}
+
+/* ===== CONTENEDOR PRINCIPAL: CENTRA LOGIN Y DASHBOARD ===== */
+.weather-dashboard-bg {
+  min-height: 100vh;
+  min-width: 100vw;
+  height: 100vh;
+  width: 100vw;
+  background: var(--main-bg);
+  display: flex;                     /* Flex para centrar vertical y horizontal */
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', 'Montserrat', Arial, sans-serif;
+  overflow: auto;
+}
+
+/* ===== LOGIN & REGISTRO ===== */
+.auth-dual-center {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0px 6px 40px 0px rgba(0,0,0,0.12);  /* Sombra moderna */
+  max-width: 940px;     /* Ancho máximo en desktop */
+  width: 100%;
+  min-width: 320px;     /* Mínimo para que nunca colapse */
+  min-height: 480px;    /* Mínimo para evitar que se vea apretado */
+  margin: auto;
+  align-self: center;
+  display: flex;
+  flex-direction: row;  /* Login y registro a los lados */
+  align-items: stretch;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.auth-card-side {
+  flex: 1 1 0;
+  padding: 46px 44px;                /* Espaciado interno */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 340px;
+  max-width: 430px;
+  background: #fff;
+}
+.auth-login {
+  border-right: 2.5px solid var(--main-border);   /* Línea separadora vertical */
+}
+.main-title {
+  color: var(--main-blue);
+  font-size: 25px;
+  font-weight: 700;
+  text-align: left;
+  margin-bottom: 2px;
+}
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 14px;
+  margin-top: 0;
+  text-align: left;
+}
+.form-title {
+  color: var(--main-blue);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  margin-top: 0;
+  text-align: left;
+}
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field-group label {
+  color: #334155;
+  font-size: 15px;
+  font-weight: 500;
+}
+.field-group input {
+  background: var(--input-bg);
+  border-radius: 6px;
+  border: 1px solid var(--input-border);
+  padding: 12px;
+  font-size: 16px;
+}
+.primary-btn, .secondary-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 14px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: background .17s;
+  margin-top: 10px;
+}
+.primary-btn {
+  background: #2563eb;        /* Azul llamativo */
+  border-radius: 7px;
+  padding: 0 32px;
+  font-size: 16px;
+  font-weight: 700;
+  height: 48px;
+  min-width: 115px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.primary-btn:hover { background: #1549b7; }
+.secondary-btn {
+  background: #4b96ff;
+  padding: 14px 0;
+  min-width: 115px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.secondary-btn:hover { background: #2265d4; }
+.auth-msg {
+  color: #e74c3c;
+  margin-top: 13px;
+  text-align: left;
+  font-size: 1.07rem;
+  font-weight: 500;
+}
+.divider-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  max-width: 60px;
+  background: transparent;
+  position: relative;
+}
+.divider-line {
+  width: 2px;
+  height: 75px;
+  background: var(--main-border);
   margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+}
+.divider-text {
+  color: #b0b6bf;
+  font-size: 21px;
+  font-weight: 700;
+  text-align: center;
+  margin: 12px 0;
+  line-height: 1;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+/* ===== DASHBOARD PRINCIPAL (después de login) ===== */
+.dashboard-container {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+.header-bar {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0 28px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 700px;
+  height: 64px;
+  margin: 40px auto 0 auto;
+  border-radius: 10px 10px 0 0;
+}
+.app-name {
+  color: var(--main-blue);
+  font-size: 20px;
+  font-weight: 700;
+}
+.user-controls {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.user-email {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+.logout-btn {
+  background: #f1f5f9;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 15px;
+  color: #334155;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background .18s;
+}
+.logout-btn:hover { background: #e2e8f0; }
+.main-content {
+  padding: 34px 28px 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: stretch;
+  width: 100%;
+  max-width: 700px;
+  min-height: 420px;
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+  box-shadow: var(--shadow);
+  margin: 0 auto 30px auto;
+}
+.search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-bottom: 0.5rem;
+}
+.search-title {
+  color: var(--main-blue);
+  font-size: 18px;
+  font-weight: 600;
+}
+.search-form {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  align-items: center;
+}
+.city-input {
+  background: var(--input-bg);
+  border-radius: 7px;
+  border: 1px solid var(--input-border);
+  padding: 14px;
+  font-size: 15px;
+  flex: 1;
+  min-width: 0;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+/* ===== HISTORIAL DE BÚSQUEDAS ===== */
+.history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.history-title {
+  color: var(--main-blue);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+.history-cards-container {
+  max-height: 45vh;         /* El historial nunca crece más allá de 45% altura ventana */
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  padding-right: 2px;
+}
+.history-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 100%;
+}
+
+/* ===== TARJETA INDIVIDUAL DE CLIMA ===== */
+.weather-card {
+  background: var(--input-bg);
+  border-radius: 9px;
+  padding: 12px 15px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 15px;
+  color: var(--text-main);
+  min-height: 62px;
+}
+.empty-card {
+  text-align: center;
+  color: #8d99ae;
+  font-weight: 500;
+}
+.weather-details {
+  width: 100%;
+}
+.weather-card-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.11rem;
+  margin-bottom: 2px;
+}
+.city-country {
+  display: flex;
+  align-items: baseline;
+}
+.city {
+  color: #1457c9;
+  font-size: 1.19rem;
+  font-weight: 800;
+  margin-right: 2px;
+  letter-spacing: 0.2px;
+}
+.country {
+  color: #1e293b;
+  font-size: 1rem;
+  font-weight: 400;
+}
+.weather-card-date {
+  color: #888;
+  font-size: 0.98rem;
+  font-weight: 400;
+}
+.weather-card-row-mid {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 4px;
+}
+.weather-description {
+  color: #2563eb;
+  font-size: 1.11rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.weather-icon img {
+  width: 34px;
+  height: 34px;
+}
+.weather-card-info {
+  font-size: 0.98rem;
+  color: #334155;
+  font-weight: 500;
+  margin-bottom: 1px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 7px;
+  align-items: center;
+}
+.weather-label {
+  color: #64748b;
+  font-size: 0.98rem;
+  margin-left: 1px;
+}
+.weather-value {
+  font-weight: 700;
+  color: var(--text-main);
+  margin-right: 7px;
+}
+.weather-card-user {
+  font-size: 0.95rem;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  color: #22607599;
+  font-size: 1.10rem;
+  padding: 2.2rem 0 1.1rem 0;
+  width: 100vw;
+  background: transparent;
+  margin-top: 20px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 950px) {
+  .auth-dual-center {
+    flex-direction: column;     /* Login y registro uno debajo del otro */
+    align-items: stretch;
+    max-width: 98vw;
+    border-radius: 18px;
+    box-shadow: 0px 4px 16px 0px rgba(0,0,0,0.08);
+  }
+  .auth-card-side {
+    max-width: 98vw;
+    border-right: none !important;
+    padding: 30px 6vw;
+  }
+  .divider-vertical {
+    flex-direction: row;
+    min-width: 100%;
+    max-width: 100%;
+    margin: 0 0 14px 0;
+    height: 36px;
+  }
+  .divider-line {
+    width: 100%;
+    max-width: 80px;
+    height: 2px;
+    margin: 0 6px;
+  }
+  .divider-text {
+    margin: 0 9px;
+    font-size: 18px;
+  }
+  .header-bar, .main-content {
+    max-width: 98vw;
+    padding-left: 5vw;
+    padding-right: 5vw;
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
+/* ===== AÚN MÁS RESPONSIVO PARA MÓVIL ===== */
+@media (max-width: 600px) {
+  .main-content,
+  .header-bar {
+    padding-left: 2vw !important;
+    padding-right: 2vw !important;
+    min-width: 0;
   }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+  .weather-card {
+    padding: 7px 6px;
+    font-size: 14px;
+  }
+  .city {
+    font-size: 1rem;
+  }
+  .weather-description {
+    font-size: 1rem;
   }
 }

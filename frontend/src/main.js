@@ -2,6 +2,8 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
+import './assets/main.css'
+
 import { MotionPlugin } from '@vueuse/motion'
 
 const app = createApp(App)     // Primero crea la app

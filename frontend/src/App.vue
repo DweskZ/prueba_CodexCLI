@@ -1,9 +1,15 @@
+<template>
+  <h1>Hola mundo</h1>
+  <AuthForm @login="loginUser" @register="registerUser" :authMsg="authMsg" :authMsgType="authMsgType" />
+</template>
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import AuthForm from './components/AuthForm.vue'
 import HeaderBar from './components/HeaderBar.vue'
 import WeatherSearch from './components/WeatherSearch.vue'
 import WeatherHistory from './components/WeatherHistory.vue'
+
 
 // 🌐 Dirección del backend en Cloud Run
 const API_URL = "https://backend-750975947564.northamerica-south1.run.app"

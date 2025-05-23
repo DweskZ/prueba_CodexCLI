@@ -7,6 +7,23 @@ import axios from "axios";
 const weatherRepo = AppDataSource.getRepository(Weather);
 const userRepo = AppDataSource.getRepository(User);
 
+// Interfaz para tipar correctamente la respuesta de OpenWeatherMap
+interface WeatherApiResponse {
+  name: string;
+  weather: { description: string; icon: string }[];
+  main: {
+    temp: number;
+    feels_like: number;
+    humidity: number;
+  };
+  wind: {
+    speed: number;
+  };
+  sys: {
+    country: string;
+  };
+}
+
 export const searchAndSaveWeather = async (req: Request, res: Response) => {
   const { city, email } = req.body;
 
@@ -18,9 +35,13 @@ export const searchAndSaveWeather = async (req: Request, res: Response) => {
     const user = await userRepo.findOne({ where: { email } });
     if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
 
-    const apiKey = ""
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ message: "API_KEY no configurada" });
+    }
+
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-    const response = await axios.get(url);
+    const response = await axios.get<WeatherApiResponse>(url);
     const data = response.data;
 
     const clima = new Weather();

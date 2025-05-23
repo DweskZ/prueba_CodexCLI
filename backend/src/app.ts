@@ -7,7 +7,10 @@ import weatherRoutes from "./routes/weatherRoutes";
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
+
+console.log("🔥 PORT en ejecución:", process.env.PORT);
+
 
 app.use(cors());
 app.use(express.json());
@@ -19,9 +22,12 @@ app.use("/api/weather", weatherRoutes);
 
 AppDataSource.initialize()
   .then(() => {
-    console.log("📦 Base de datos conectada");
+    console.log("✅ DB conectada, arrancando servidor...");
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
     });
   })
-  .catch((error) => console.error("❌ Error al conectar DB", error));
+  .catch((err) => {
+    console.error("❌ Error al conectar DB", err);
+    process.exit(1); // ← Muy importante
+  });

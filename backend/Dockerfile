@@ -17,11 +17,11 @@ COPY . .
 RUN npm run build
 
 # Exponer el puerto que utiliza tu aplicación
-EXPOSE 3000
+EXPOSE 8080
 
 # Configurar la variable de entorno API_KEY
 ENV API_KEY=be0d70e3b1dd6929968b214d9c0d7540
 
 # Comando para ejecutar la aplicación
-CMD ["./wait-for-postgres.sh","npm", "start"]
+CMD ["npm", "start"]
 

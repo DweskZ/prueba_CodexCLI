@@ -1,5 +1,5 @@
 <template>
-  <h1>FUNCIONO EL GITHUB ACTIONS YA A DORMIR</h1>
+  <h1>Practica en clase</h1>
   <AuthForm @login="loginUser" @register="registerUser" :authMsg="authMsg" :authMsgType="authMsgType" />
 </template>
 
